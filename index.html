@@ -9,12 +9,12 @@
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
         :root {
-            --gold: #b8860b;
-            --gold-light: #d4a843;
-            --cream: #faf6f0;
+            --gold: #5a7a62;
+            --gold-light: #b0c9b8;
+            --cream: #f7faf8;
             --dark: #2c2c2c;
-            --sage: #8a9a7b;
-            --navy: #2c3e50;
+            --sage: #4a6b52;
+            --navy: #2d4a34;
         }
 
         html { scroll-behavior: smooth; }
@@ -26,58 +26,52 @@
             overflow-x: hidden;
         }
 
-        /* ========== MUSIC TOGGLE ========== */
-        .music-toggle {
+        /* music toggle hidden - autoplay only */
+
+        /* ========== FIRST IMAGE SCREEN ========== */
+        #first-screen {
             position: fixed;
-            bottom: 24px;
-            right: 24px;
-            z-index: 9999;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            border: 2px solid var(--gold);
-            background: rgba(44,62,80,0.9);
-            color: var(--gold-light);
-            font-size: 1.3rem;
+            top: 0; left: 0;
+            width: 100%; height: 100vh;
+            z-index: 1100;
             cursor: pointer;
+            background: url('first_image.jpg') center/cover no-repeat;
             display: flex;
             align-items: center;
             justify-content: center;
-            backdrop-filter: blur(8px);
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
         }
 
-        .music-toggle:hover {
-            transform: scale(1.1);
-            box-shadow: 0 4px 25px rgba(184,134,11,0.4);
+        #first-screen.gone { display: none; }
+
+        .first-screen-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.3);
         }
 
-        .music-bars {
-            display: flex;
-            align-items: flex-end;
-            gap: 3px;
-            height: 18px;
+        .first-screen-text {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            color: white;
         }
 
-        .music-bars span {
-            display: block;
-            width: 3px;
-            background: var(--gold-light);
-            border-radius: 2px;
-            transition: height 0.2s ease;
+        .first-screen-text h2 {
+            font-family: 'Great Vibes', cursive;
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            color: var(--gold-light);
+            text-shadow: 0 2px 20px rgba(0,0,0,0.6);
+            margin-bottom: 20px;
         }
 
-        .music-bars.playing span:nth-child(1) { animation: bar 0.6s ease-in-out infinite alternate; }
-        .music-bars.playing span:nth-child(2) { animation: bar 0.6s ease-in-out 0.15s infinite alternate; }
-        .music-bars.playing span:nth-child(3) { animation: bar 0.6s ease-in-out 0.3s infinite alternate; }
-        .music-bars.playing span:nth-child(4) { animation: bar 0.6s ease-in-out 0.1s infinite alternate; }
-
-        .music-bars:not(.playing) span { height: 4px !important; }
-
-        @keyframes bar {
-            0% { height: 4px; }
-            100% { height: 18px; }
+        .first-screen-cta {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1rem;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            color: white;
+            animation: pulse-cta 2.5s ease-in-out infinite;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.7);
         }
 
         /* ========== DOOR VIDEO OVERLAY ========== */
@@ -87,8 +81,18 @@
             width: 100%; height: 100vh;
             z-index: 1000;
             overflow: hidden;
-            cursor: pointer;
             background: #000;
+            visibility: hidden;
+        }
+
+        #door-overlay.show {
+            visibility: visible;
+        }
+
+        #door-overlay.dissolve {
+            opacity: 0;
+            transition: opacity 1.5s ease;
+            pointer-events: none;
         }
 
         #door-overlay.gone { display: none; }
@@ -300,160 +304,125 @@
             margin-top: 8px;
         }
 
-        /* ========== EVENT CARDS ========== */
-        .events-section {
+        /* ========== TIMELINE (Mediterranean style) ========== */
+        .timeline-section {
             padding: 100px 20px;
             background: var(--cream);
-        }
-
-        .events-header {
             text-align: center;
-            margin-bottom: 70px;
         }
 
-        .events-header .section-title { color: var(--dark); }
-        .events-header .section-subtitle { color: var(--sage); }
+        .timeline-label {
+            font-size: 0.85rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--sage);
+            margin-bottom: 10px;
+        }
 
-        .event-card {
-            max-width: 900px;
-            margin: 0 auto 80px;
-            background: white;
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 10px 50px rgba(0,0,0,0.07);
+        .timeline-title {
+            font-family: 'Great Vibes', cursive;
+            font-size: clamp(2.5rem, 5vw, 3.5rem);
+            color: var(--dark);
+            margin-bottom: 60px;
+        }
+
+        .timeline {
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        /* Vertical line removed */
+
+        .tl-item {
+            position: relative;
+            padding: 30px 0;
             opacity: 0;
-            transform: translateY(40px);
-            transition: opacity 0.8s ease, transform 0.8s ease;
+            transform: translateY(25px);
+            transition: all 0.7s ease;
         }
 
-        .event-card.visible {
+        .tl-item.visible {
             opacity: 1;
             transform: translateY(0);
         }
 
-        .event-card-top {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-        }
+        /* Dot removed */
 
-        .event-card-image {
-            height: 320px;
-            background-size: cover;
-            background-position: center;
-            position: relative;
-        }
-
-        .event-card-image::after {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: linear-gradient(135deg, rgba(0,0,0,0.1), rgba(0,0,0,0.3));
-        }
-
-        .event-badge {
-            position: absolute;
-            top: 20px; left: 20px;
-            background: rgba(184,134,11,0.9);
-            color: white;
-            padding: 6px 18px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            z-index: 2;
-        }
-
-        .event-card-info {
-            padding: 40px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        .event-icon {
-            font-size: 2.5rem;
-            margin-bottom: 15px;
-        }
-
-        .event-time {
-            font-family: 'Playfair Display', serif;
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: var(--gold);
-            margin-bottom: 8px;
-        }
-
-        .event-name {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: var(--dark);
-            margin-bottom: 12px;
-        }
-
-        .event-address {
+        .tl-time-location {
+            font-family: 'Cormorant Garamond', serif;
             font-size: 1rem;
-            color: #777;
-            line-height: 1.6;
+            color: var(--sage);
+            letter-spacing: 2px;
             margin-bottom: 6px;
         }
 
-        .event-address-icon {
+        .tl-time {
+            font-weight: 600;
             color: var(--gold);
-            margin-right: 6px;
         }
 
-        .event-description {
-            font-size: 1rem;
+        .tl-event-name {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.5rem, 3vw, 2.2rem);
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 8px;
+        }
+
+        .tl-address {
+            font-size: 0.95rem;
             color: #999;
-            line-height: 1.7;
-            margin-top: 12px;
-            font-style: italic;
+            margin-bottom: 12px;
         }
 
-        .event-actions {
-            display: flex;
-            gap: 12px;
-            margin-top: 20px;
-            flex-wrap: wrap;
-        }
-
-        .event-btn {
+        .tl-maps-link {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            padding: 10px 22px;
+            gap: 6px;
+            padding: 8px 20px;
             border: 1.5px solid var(--gold);
             color: var(--gold);
             text-decoration: none;
             border-radius: 30px;
             font-family: 'Cormorant Garamond', serif;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             letter-spacing: 1px;
             transition: all 0.3s ease;
+            margin-top: 4px;
         }
 
-        .event-btn:hover {
+        .tl-maps-link:hover {
             background: var(--gold);
             color: white;
         }
 
-        .event-btn-primary {
-            background: var(--gold);
-            color: white;
+        /* Divider between items */
+        .tl-divider {
+            width: 40px;
+            height: 1px;
+            background: var(--gold-light);
+            margin: 0 auto;
+            opacity: 0.4;
         }
 
-        .event-btn-primary:hover {
-            background: #9a7209;
-            border-color: #9a7209;
+        /* Event photo */
+        .tl-photo {
+            width: 280px;
+            height: 180px;
+            border-radius: 14px;
+            object-fit: cover;
+            margin: 0 auto 18px;
+            display: block;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
         }
 
-        /* Map */
-        .event-card-map {
-            width: 100%;
-            height: 250px;
-            border: none;
-            border-top: 1px solid #f0ece4;
+        /* Last items without location (dinner, party) */
+        .tl-item-simple .tl-event-name {
+            font-size: clamp(1.3rem, 2.5vw, 1.8rem);
+            color: var(--sage);
+            font-weight: 400;
+            font-style: italic;
         }
 
         /* ========== RSVP ========== */
@@ -642,16 +611,47 @@
             opacity: 0.4;
         }
 
+        /* ========== SECTION REVEAL ========== */
+        .section-reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 1s ease, transform 1s ease;
+        }
+
+        .section-reveal.revealed {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ========== PETALS ========== */
+        .petal {
+            position: fixed;
+            top: -40px;
+            z-index: 10000;
+            pointer-events: none;
+            font-size: 20px;
+            opacity: 0;
+        }
+
+        @keyframes petal-fall {
+            0% {
+                opacity: 0;
+                transform: translateY(0) rotate(0deg) translateX(0);
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 0.8;
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(100vh) rotate(720deg) translateX(var(--drift));
+            }
+        }
+
         /* ========== RESPONSIVE ========== */
         @media (max-width: 768px) {
-            .event-card-top {
-                grid-template-columns: 1fr;
-            }
-
-            .event-card-image { height: 220px; }
-
-            .event-card-info { padding: 28px; }
-
             .form-row { grid-template-columns: 1fr; }
 
             .countdown-grid { gap: 15px; }
@@ -663,23 +663,24 @@
 
     <!-- ======== MUSIC ======== -->
     <audio id="bg-music" loop preload="auto">
-        <source src="https://www.bensound.com/bensound-music/bensound-romantique.mp3" type="audio/mpeg">
+        <source src="music.mp3" type="audio/mpeg">
     </audio>
 
-    <button class="music-toggle" id="music-toggle" title="Musica">
-        <div class="music-bars" id="music-bars">
-            <span></span><span></span><span></span><span></span>
+
+    <!-- ======== FIRST SCREEN ======== -->
+    <div id="first-screen">
+        <div class="first-screen-overlay"></div>
+        <div class="first-screen-text">
+            <h2>Giuseppe & Alessia</h2>
+            <div class="first-screen-cta">Clicca Qui</div>
         </div>
-    </button>
+    </div>
 
     <!-- ======== DOOR VIDEO OVERLAY ======== -->
     <div id="door-overlay">
         <video id="door-video" muted playsinline preload="auto">
             <source src="door-video.mp4" type="video/mp4">
         </video>
-        <div class="door-cta" id="door-cta">
-            <div class="door-cta-text">Tocca per aprire</div>
-        </div>
     </div>
 
     <!-- ======== MAIN CONTENT ======== -->
@@ -706,7 +707,7 @@
         </section>
 
         <!-- COUNTDOWN -->
-        <section class="countdown-section">
+        <section class="countdown-section section-reveal">
             <h2 class="section-title">Manca poco...</h2>
             <p class="section-subtitle">al giorno pi&ugrave; bello</p>
             <div class="countdown-grid">
@@ -729,88 +730,46 @@
             </div>
         </section>
 
-        <!-- EVENTS -->
-        <section class="events-section">
-            <div class="events-header">
-                <h2 class="section-title" style="color:var(--dark)">La Nostra Giornata</h2>
-                <p class="section-subtitle" style="color:var(--sage)">17 Maggio 2026</p>
-            </div>
+        <!-- TIMELINE -->
+        <section class="timeline-section section-reveal">
+            <p class="timeline-label">Programma</p>
+            <h2 class="timeline-title">Timeline</h2>
 
-            <!-- CERIMONIA -->
-            <div class="event-card">
-                <div class="event-card-top">
-                    <div class="event-card-image" style="background-image: url('https://images.unsplash.com/photo-1510070112810-d4e9a46d9e91?w=800&q=80')">
-                        <div class="event-badge">Cerimonia</div>
-                    </div>
-                    <div class="event-card-info">
-                        <div class="event-icon">&#9962;</div>
-                        <div class="event-time">11:00</div>
-                        <h3 class="event-name">Chiesa di San Simeone Profeta</h3>
-                        <p class="event-address">
-                            <span class="event-address-icon">&#128205;</span>
-                            Camigliano (CE), Campania
-                        </p>
-                        <p class="event-description">
-                            Il momento pi&ugrave; atteso: il nostro "S&igrave;, lo voglio" nella suggestiva Chiesa di San Simeone Profeta.
-                        </p>
-                        <div class="event-actions">
-                            <a href="https://maps.google.com/?q=Chiesa+San+Simeone+Profeta+Camigliano+CE" target="_blank" class="event-btn event-btn-primary">
-                                &#128506; Google Maps
-                            </a>
-                            <a href="https://maps.google.com/maps/dir//Chiesa+San+Simeone+Profeta+Camigliano+CE" target="_blank" class="event-btn">
-                                &#128663; Indicazioni
-                            </a>
-                        </div>
-                    </div>
+            <div class="timeline">
+                <div class="tl-item">
+                    <img src="chiesa.jpg" alt="Chiesa di San Simeone Profeta" class="tl-photo">
+                    <p class="tl-time-location">
+                        <span class="tl-time">11:00</span> &middot; Chiesa di San Simeone Profeta
+                    </p>
+                    <h3 class="tl-event-name">Cerimonia</h3>
+                    <p class="tl-address">Camigliano (CE), Campania</p>
+                    <a href="https://maps.google.com/?q=Chiesa+San+Simeone+Profeta+Camigliano+CE" target="_blank" class="tl-maps-link">
+                        &#128205; Apri in Google Maps
+                    </a>
+                    <a href="https://www.google.com/maps/search/?api=1&query=41.18242235725704,14.212064494592353" target="_blank" class="tl-maps-link">
+                        &#128663; Parcheggio
+                    </a>
                 </div>
-                <iframe
-                    class="event-card-map"
-                    loading="lazy"
-                    referrerpolicy="no-referrer-when-downgrade"
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3015.5!2d14.12!3d41.18!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDHCsDEwJzQ4LjAiTiAxNMKwMDcnMTIuMCJF!5e0!3m2!1sit!2sit!4v1!5m2!1sit!2sit&q=Chiesa+San+Simeone+Profeta+Camigliano"
-                    allowfullscreen>
-                </iframe>
-            </div>
 
-            <!-- RICEVIMENTO -->
-            <div class="event-card">
-                <div class="event-card-top">
-                    <div class="event-card-image" style="background-image: url('https://images.unsplash.com/photo-1559128010-7c1ad6e1b6a5?w=800&q=80')">
-                        <div class="event-badge">Ricevimento</div>
-                    </div>
-                    <div class="event-card-info">
-                        <div class="event-icon">&#127864;</div>
-                        <div class="event-time">14:00</div>
-                        <h3 class="event-name">Villa Punta Pennata</h3>
-                        <p class="event-address">
-                            <span class="event-address-icon">&#128205;</span>
-                            Bacoli (NA), Lago Miseno
-                        </p>
-                        <p class="event-description">
-                            Benvenuti a Villa Punta Pennata! Aperitivo e ricevimento con vista mozzafiato sul Lago Miseno, tra profumi e sapori campani.
-                        </p>
-                        <div class="event-actions">
-                            <a href="https://maps.google.com/?q=Villa+Punta+Pennata+Bacoli" target="_blank" class="event-btn event-btn-primary">
-                                &#128506; Google Maps
-                            </a>
-                            <a href="https://maps.google.com/maps/dir//Villa+Punta+Pennata+Bacoli" target="_blank" class="event-btn">
-                                &#128663; Indicazioni
-                            </a>
-                        </div>
-                    </div>
+                <div class="tl-divider"></div>
+
+                <div class="tl-item">
+                    <img src="villa.webp" alt="Villa Punta Pennata" class="tl-photo">
+                    <p class="tl-time-location">
+                        <span class="tl-time">14:00</span> &middot; Villa Punta Pennata
+                    </p>
+                    <h3 class="tl-event-name">Ricevimento</h3>
+                    <p class="tl-address">Bacoli (NA), Lago Miseno</p>
+                    <a href="https://www.google.com/maps/search/?api=1&query=40.793908375913155,14.08071763384797" target="_blank" class="tl-maps-link">
+                        &#128205; Apri in Google Maps
+                    </a>
                 </div>
-                <iframe
-                    class="event-card-map"
-                    loading="lazy"
-                    referrerpolicy="no-referrer-when-downgrade"
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3015.5!2d14.07!3d40.79!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDDCsDQ3JzI0LjAiTiAxNMKwMDQnMTIuMCJF!5e0!3m2!1sit!2sit!4v1!5m2!1sit!2sit&q=Villa+Punta+Pennata+Bacoli"
-                    allowfullscreen>
-                </iframe>
+
             </div>
         </section>
 
         <!-- RSVP -->
-        <section class="rsvp-section" id="rsvp">
+        <section class="rsvp-section section-reveal" id="rsvp">
             <div class="rsvp-header">
                 <h2 class="section-title">Conferma la tua Presenza</h2>
                 <p class="section-subtitle">Vi preghiamo di confermare entro il 30 Aprile 2026</p>
@@ -846,6 +805,10 @@
                         </select>
                     </div>
                 </div>
+                <div class="form-group" id="nomi-ospiti-group" style="display:none">
+                    <label class="form-label">Nomi degli ospiti</label>
+                    <textarea class="form-textarea" name="nomi_ospiti" placeholder="Indica i nomi di tutti gli ospiti" style="min-height:80px"></textarea>
+                </div>
                 <div class="form-group">
                     <label class="form-label">Allergie / Intolleranze</label>
                     <input type="text" class="form-input" name="allergie" placeholder="Segnala eventuali allergie o intolleranze">
@@ -860,7 +823,7 @@
         </section>
 
         <!-- QUOTE -->
-        <section class="quote-section">
+        <section class="quote-section section-reveal">
             <div class="quote-icon">&#10075;&#10075;</div>
             <p class="quote-text">
                 L'amore non si guarda l'un l'altro,<br>
@@ -870,7 +833,7 @@
         </section>
 
         <!-- FOOTER -->
-        <footer class="footer">
+        <footer class="footer section-reveal">
             <div class="footer-names">Giuseppe & Alessia</div>
             <p class="footer-date">17 &bull; 05 &bull; 2026</p>
             <div class="footer-hearts">&#10084; &#10084; &#10084;</div>
@@ -878,36 +841,29 @@
     </div>
 
     <script>
-        // ========== DOOR VIDEO ==========
+        // ========== FIRST SCREEN + DOOR VIDEO ==========
+        const firstScreen = document.getElementById('first-screen');
         const doorOverlay = document.getElementById('door-overlay');
         const doorVideo = document.getElementById('door-video');
-        const doorCta = document.getElementById('door-cta');
         const mainContent = document.getElementById('main-content');
         const bgMusic = document.getElementById('bg-music');
-        const musicToggle = document.getElementById('music-toggle');
-        const musicBars = document.getElementById('music-bars');
-        let doorOpened = false;
-        let musicPlaying = false;
 
         document.body.style.overflow = 'hidden';
 
-        doorOverlay.addEventListener('click', () => {
-            if (doorOpened) return;
-            doorOpened = true;
-
-            // Hide CTA and play video
-            doorCta.classList.add('hide');
-            doorVideo.play();
-
-            // Start music on interaction
+        // Step 1: Click on first image → start music + show video
+        firstScreen.addEventListener('click', () => {
+            // Start music immediately
             bgMusic.volume = 0.4;
-            bgMusic.play().then(() => {
-                musicPlaying = true;
-                musicBars.classList.add('playing');
-            }).catch(() => {});
+            bgMusic.play().catch(() => {});
+
+            // Hide first screen, show and play video
+            firstScreen.classList.add('gone');
+            doorOverlay.classList.add('show');
+            doorVideo.play();
 
             // When video ends, dissolve into content
             doorVideo.addEventListener('ended', () => {
+                window.scrollTo(0, 0);
                 doorOverlay.classList.add('dissolve');
                 mainContent.classList.add('visible');
                 document.body.style.overflow = 'auto';
@@ -920,27 +876,13 @@
             // Fallback: if video is very long, dissolve after 8s
             setTimeout(() => {
                 if (!doorOverlay.classList.contains('dissolve')) {
+                    window.scrollTo(0, 0);
                     doorOverlay.classList.add('dissolve');
                     mainContent.classList.add('visible');
                     document.body.style.overflow = 'auto';
                     setTimeout(() => doorOverlay.classList.add('gone'), 2000);
                 }
             }, 8000);
-        });
-
-        // ========== MUSIC TOGGLE ==========
-        musicToggle.addEventListener('click', (e) => {
-            e.stopPropagation();
-            if (musicPlaying) {
-                bgMusic.pause();
-                musicPlaying = false;
-                musicBars.classList.remove('playing');
-            } else {
-                bgMusic.play().then(() => {
-                    musicPlaying = true;
-                    musicBars.classList.add('playing');
-                }).catch(() => {});
-            }
         });
 
         // ========== COUNTDOWN ==========
@@ -975,7 +917,18 @@
             });
         }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
 
-        document.querySelectorAll('.event-card').forEach(el => observer.observe(el));
+        document.querySelectorAll('.tl-item').forEach(el => observer.observe(el));
+
+        // ========== SECTION REVEAL ON SCROLL ==========
+        const sectionObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('revealed');
+                }
+            });
+        }, { threshold: 0.15 });
+
+        document.querySelectorAll('.section-reveal').forEach(el => sectionObserver.observe(el));
 
         // ========== PARALLAX ==========
         window.addEventListener('scroll', () => {
@@ -987,8 +940,35 @@
             }
         });
 
+        // ========== FALLING PETALS ==========
+        function createPetals() {
+            const petals = ['\u{1F339}', '\u{1F33A}', '\u{1F33B}', '\u{1F940}', '\u2764\uFE0F'];
+            for (let i = 0; i < 50; i++) {
+                const petal = document.createElement('div');
+                petal.className = 'petal';
+                petal.textContent = petals[Math.floor(Math.random() * petals.length)];
+                petal.style.left = Math.random() * 100 + 'vw';
+                petal.style.fontSize = (16 + Math.random() * 18) + 'px';
+                petal.style.setProperty('--drift', (Math.random() * 200 - 100) + 'px');
+
+                const duration = 3 + Math.random() * 4;
+                const delay = Math.random() * 3;
+
+                petal.style.animation = `petal-fall ${duration}s ease-in ${delay}s forwards`;
+                document.body.appendChild(petal);
+
+                setTimeout(() => petal.remove(), (duration + delay) * 1000 + 200);
+            }
+        }
+
+        // ========== SHOW/HIDE NOMI OSPITI ==========
+        document.querySelector('select[name="ospiti"]').addEventListener('change', (e) => {
+            const group = document.getElementById('nomi-ospiti-group');
+            group.style.display = parseInt(e.target.value) > 1 ? 'block' : 'none';
+        });
+
         // ========== RSVP FORM ==========
-        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwS_m0EWeR5uONfwsiRxBP_X97BBuRIiZbJcLU8s0WLq09_KXzV_wj6FGCEpDtqseScEQ/exec';
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz_2H3-2Wf9JU0AHSjqsUmxuavIDCO1iLWJDC7XRjGsbQss-yyEgsJw2omh9kE2SNfAnw/exec';
 
         const rsvpForm = document.getElementById('rsvp-form');
         const rsvpBtn = document.getElementById('rsvp-btn');
@@ -1005,6 +985,7 @@
                 nome: fd.get('nome'),
                 ospiti: fd.get('ospiti'),
                 conferma: fd.get('conferma'),
+                nomi_ospiti: fd.get('nomi_ospiti') || '',
                 allergie: fd.get('allergie') || '',
                 note: fd.get('note') || ''
             };
@@ -1019,6 +1000,7 @@
                 formMessage.textContent = 'Grazie! La tua conferma \u00e8 stata inviata con successo!';
                 formMessage.className = 'form-message show success';
                 rsvpForm.reset();
+                createPetals();
             } catch (error) {
                 formMessage.textContent = 'Si \u00e8 verificato un errore. Riprova pi\u00f9 tardi.';
                 formMessage.className = 'form-message show error';
