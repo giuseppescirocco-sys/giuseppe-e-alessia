@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giuseppe & Alessia - 17 Maggio 2026</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Great+Vibes&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --gold: #b8860b;
+            --gold-light: #d4a843;
+            --cream: #faf6f0;
+            --dark: #2c2c2c;
+            --sage: #8a9a7b;
+            --navy: #2c3e50;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Cormorant Garamond', serif;
+            background: var(--cream);
+            color: var(--dark);
+            overflow-x: hidden;
+        }
+
+        /* ========== MUSIC TOGGLE ========== */
+        .music-toggle {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 9999;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 2px solid var(--gold);
+            background: rgba(44,62,80,0.9);
+            color: var(--gold-light);
+            font-size: 1.3rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(8px);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        .music-toggle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 25px rgba(184,134,11,0.4);
+        }
+
+        .music-bars {
+            display: flex;
+            align-items: flex-end;
+            gap: 3px;
+            height: 18px;
+        }
+
+        .music-bars span {
+            display: block;
+            width: 3px;
+            background: var(--gold-light);
+            border-radius: 2px;
+            transition: height 0.2s ease;
+        }
+
+        .music-bars.playing span:nth-child(1) { animation: bar 0.6s ease-in-out infinite alternate; }
+        .music-bars.playing span:nth-child(2) { animation: bar 0.6s ease-in-out 0.15s infinite alternate; }
+        .music-bars.playing span:nth-child(3) { animation: bar 0.6s ease-in-out 0.3s infinite alternate; }
+        .music-bars.playing span:nth-child(4) { animation: bar 0.6s ease-in-out 0.1s infinite alternate; }
+
+        .music-bars:not(.playing) span { height: 4px !important; }
+
+        @keyframes bar {
+            0% { height: 4px; }
+            100% { height: 18px; }
+        }
+
+        /* ========== DOOR VIDEO OVERLAY ========== */
+        #door-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100vh;
+            z-index: 1000;
+            overflow: hidden;
+            cursor: pointer;
+            background: #000;
+        }
+
+        #door-overlay.gone { display: none; }
+
+        #door-video {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            object-fit: cover;
+        }
+
+        /* CTA over video first frame */
+        .door-cta {
+            position: absolute;
+            bottom: 60px; left: 0; right: 0;
+            z-index: 10;
+            text-align: center;
+            transition: opacity 0.6s ease;
+        }
+
+        .door-cta.hide { opacity: 0; pointer-events: none; }
+
+        .door-cta-text {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1rem;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            color: var(--gold-light);
+            animation: pulse-cta 2.5s ease-in-out infinite;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.7);
+        }
+
+        @keyframes pulse-cta {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; text-shadow: 0 0 30px rgba(184,134,11,0.5), 0 2px 10px rgba(0,0,0,0.7); }
+        }
+
+        /* Dissolve out */
+        #door-overlay.dissolve {
+            opacity: 0;
+            transition: opacity 1.5s ease;
+            pointer-events: none;
+        }
+
+        /* ========== MAIN CONTENT ========== */
+        #main-content {
+            opacity: 0;
+            transition: opacity 1.5s ease;
+        }
+
+        #main-content.visible { opacity: 1; }
+
+        /* ========== HERO ========== */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            background:
+                linear-gradient(to bottom, rgba(250,246,240,0), rgba(250,246,240,0.7)),
+                url('https://images.unsplash.com/photo-1559128010-7c1ad6e1b6a5?w=1920&q=80') center/cover fixed;
+            padding: 40px 20px;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(250,246,240,0.72);
+        }
+
+        .hero-content { position: relative; z-index: 2; }
+
+        .ornament-line {
+            width: 120px; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+            margin: 0 auto 30px;
+        }
+
+        .hero-subtitle {
+            font-size: 1.1rem;
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            color: var(--sage);
+            margin-bottom: 20px;
+        }
+
+        .hero-names {
+            font-family: 'Great Vibes', cursive;
+            font-size: clamp(3rem, 8vw, 6rem);
+            color: var(--dark);
+            line-height: 1.2;
+        }
+
+        .hero-names .amp {
+            display: block;
+            font-size: 0.5em;
+            color: var(--gold);
+            margin: -5px 0;
+        }
+
+        .hero-date {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
+            color: var(--gold);
+            letter-spacing: 4px;
+            margin-top: 20px;
+        }
+
+        .hero-location {
+            font-size: 1rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--sage);
+            margin-top: 10px;
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 30px; left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+            text-align: center;
+            color: var(--gold);
+            animation: bounce 2s infinite;
+        }
+
+        .scroll-indicator span {
+            display: block;
+            font-size: 0.75rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .scroll-arrow {
+            width: 24px; height: 24px;
+            border-right: 2px solid var(--gold);
+            border-bottom: 2px solid var(--gold);
+            transform: rotate(45deg);
+            margin: 0 auto;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
+            40% { transform: translateX(-50%) translateY(-12px); }
+            60% { transform: translateX(-50%) translateY(-6px); }
+        }
+
+        /* ========== COUNTDOWN ========== */
+        .countdown-section {
+            padding: 80px 20px;
+            text-align: center;
+            background: linear-gradient(135deg, var(--navy), #1a2a3a);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .countdown-section::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(circle at 30% 50%, rgba(184,134,11,0.1), transparent 60%);
+        }
+
+        .section-title {
+            font-family: 'Great Vibes', cursive;
+            font-size: clamp(2rem, 5vw, 3rem);
+            color: var(--gold-light);
+            margin-bottom: 10px;
+        }
+
+        .section-subtitle {
+            font-size: 0.9rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            opacity: 0.6;
+            margin-bottom: 40px;
+        }
+
+        .countdown-grid {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 2;
+        }
+
+        .countdown-item { text-align: center; min-width: 90px; }
+
+        .countdown-number {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 700;
+            color: var(--gold-light);
+            line-height: 1;
+        }
+
+        .countdown-label {
+            font-size: 0.8rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            opacity: 0.7;
+            margin-top: 8px;
+        }
+
+        /* ========== EVENT CARDS ========== */
+        .events-section {
+            padding: 100px 20px;
+            background: var(--cream);
+        }
+
+        .events-header {
+            text-align: center;
+            margin-bottom: 70px;
+        }
+
+        .events-header .section-title { color: var(--dark); }
+        .events-header .section-subtitle { color: var(--sage); }
+
+        .event-card {
+            max-width: 900px;
+            margin: 0 auto 80px;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 50px rgba(0,0,0,0.07);
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .event-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .event-card-top {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .event-card-image {
+            height: 320px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .event-card-image::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(135deg, rgba(0,0,0,0.1), rgba(0,0,0,0.3));
+        }
+
+        .event-badge {
+            position: absolute;
+            top: 20px; left: 20px;
+            background: rgba(184,134,11,0.9);
+            color: white;
+            padding: 6px 18px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            z-index: 2;
+        }
+
+        .event-card-info {
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .event-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        .event-time {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--gold);
+            margin-bottom: 8px;
+        }
+
+        .event-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 12px;
+        }
+
+        .event-address {
+            font-size: 1rem;
+            color: #777;
+            line-height: 1.6;
+            margin-bottom: 6px;
+        }
+
+        .event-address-icon {
+            color: var(--gold);
+            margin-right: 6px;
+        }
+
+        .event-description {
+            font-size: 1rem;
+            color: #999;
+            line-height: 1.7;
+            margin-top: 12px;
+            font-style: italic;
+        }
+
+        .event-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .event-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 22px;
+            border: 1.5px solid var(--gold);
+            color: var(--gold);
+            text-decoration: none;
+            border-radius: 30px;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+
+        .event-btn:hover {
+            background: var(--gold);
+            color: white;
+        }
+
+        .event-btn-primary {
+            background: var(--gold);
+            color: white;
+        }
+
+        .event-btn-primary:hover {
+            background: #9a7209;
+            border-color: #9a7209;
+        }
+
+        /* Map */
+        .event-card-map {
+            width: 100%;
+            height: 250px;
+            border: none;
+            border-top: 1px solid #f0ece4;
+        }
+
+        /* ========== RSVP ========== */
+        .rsvp-section {
+            padding: 100px 20px;
+            background: linear-gradient(135deg, var(--navy), #1a2a3a);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .rsvp-section::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(circle at 70% 30%, rgba(184,134,11,0.08), transparent 60%);
+        }
+
+        .rsvp-header {
+            text-align: center;
+            margin-bottom: 50px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .rsvp-header .section-subtitle { color: rgba(255,255,255,0.5); }
+
+        .rsvp-form {
+            max-width: 550px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .form-group { margin-bottom: 24px; }
+
+        .form-label {
+            display: block;
+            font-size: 0.85rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--gold-light);
+            margin-bottom: 8px;
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            width: 100%;
+            padding: 14px 18px;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(184,134,11,0.3);
+            border-radius: 10px;
+            color: white;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .form-input::placeholder,
+        .form-textarea::placeholder { color: rgba(255,255,255,0.3); }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            border-color: var(--gold);
+            background: rgba(255,255,255,0.12);
+            box-shadow: 0 0 20px rgba(184,134,11,0.15);
+        }
+
+        .form-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23d4a843' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            cursor: pointer;
+        }
+
+        .form-select option { background: #1a2a3a; color: white; }
+
+        .form-textarea { resize: vertical; min-height: 100px; }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .rsvp-btn {
+            display: block;
+            width: 100%;
+            padding: 16px 32px;
+            background: linear-gradient(135deg, var(--gold), var(--gold-light));
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .rsvp-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(184,134,11,0.4);
+        }
+
+        .rsvp-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+        .form-message {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 1.1rem;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.5s ease;
+        }
+
+        .form-message.show { opacity: 1; transform: translateY(0); }
+        .form-message.success { color: #7dcea0; }
+        .form-message.error { color: #e74c3c; }
+
+        /* ========== QUOTE ========== */
+        .quote-section {
+            padding: 100px 20px;
+            text-align: center;
+            background: var(--cream);
+            position: relative;
+        }
+
+        .quote-icon {
+            font-size: 4rem;
+            color: var(--gold-light);
+            opacity: 0.3;
+            margin-bottom: 20px;
+        }
+
+        .quote-text {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.3rem, 3vw, 2rem);
+            font-style: italic;
+            line-height: 1.8;
+            max-width: 700px;
+            margin: 0 auto;
+            color: var(--dark);
+        }
+
+        .quote-author {
+            margin-top: 20px;
+            font-size: 0.9rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--gold);
+        }
+
+        /* ========== FOOTER ========== */
+        .footer {
+            padding: 60px 20px;
+            text-align: center;
+            background: var(--navy);
+            color: white;
+        }
+
+        .footer-names {
+            font-family: 'Great Vibes', cursive;
+            font-size: 2.5rem;
+            color: var(--gold-light);
+            margin-bottom: 10px;
+        }
+
+        .footer-date {
+            font-size: 0.9rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.5);
+            margin-bottom: 20px;
+        }
+
+        .footer-hearts {
+            font-size: 1.2rem;
+            color: var(--gold-light);
+            opacity: 0.4;
+        }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 768px) {
+            .event-card-top {
+                grid-template-columns: 1fr;
+            }
+
+            .event-card-image { height: 220px; }
+
+            .event-card-info { padding: 28px; }
+
+            .form-row { grid-template-columns: 1fr; }
+
+            .countdown-grid { gap: 15px; }
+            .countdown-item { min-width: 70px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ======== MUSIC ======== -->
+    <audio id="bg-music" loop preload="auto">
+        <source src="https://www.bensound.com/bensound-music/bensound-romantique.mp3" type="audio/mpeg">
+    </audio>
+
+    <button class="music-toggle" id="music-toggle" title="Musica">
+        <div class="music-bars" id="music-bars">
+            <span></span><span></span><span></span><span></span>
+        </div>
+    </button>
+
+    <!-- ======== DOOR VIDEO OVERLAY ======== -->
+    <div id="door-overlay">
+        <video id="door-video" muted playsinline preload="auto">
+            <source src="door-video.mp4" type="video/mp4">
+        </video>
+        <div class="door-cta" id="door-cta">
+            <div class="door-cta-text">Tocca per aprire</div>
+        </div>
+    </div>
+
+    <!-- ======== MAIN CONTENT ======== -->
+    <div id="main-content">
+
+        <!-- HERO -->
+        <section class="hero">
+            <div class="hero-content">
+                <div class="ornament-line"></div>
+                <p class="hero-subtitle">Siamo lieti di invitarvi al nostro</p>
+                <h1 class="hero-names">
+                    Giuseppe
+                    <span class="amp">&</span>
+                    Alessia
+                </h1>
+                <div class="ornament-line" style="margin-top:30px"></div>
+                <p class="hero-date">17 Maggio 2026</p>
+                <p class="hero-location">Bacoli, Napoli</p>
+            </div>
+            <div class="scroll-indicator">
+                <span>Scopri</span>
+                <div class="scroll-arrow"></div>
+            </div>
+        </section>
+
+        <!-- COUNTDOWN -->
+        <section class="countdown-section">
+            <h2 class="section-title">Manca poco...</h2>
+            <p class="section-subtitle">al giorno pi&ugrave; bello</p>
+            <div class="countdown-grid">
+                <div class="countdown-item">
+                    <span class="countdown-number" id="days">--</span>
+                    <div class="countdown-label">Giorni</div>
+                </div>
+                <div class="countdown-item">
+                    <span class="countdown-number" id="hours">--</span>
+                    <div class="countdown-label">Ore</div>
+                </div>
+                <div class="countdown-item">
+                    <span class="countdown-number" id="minutes">--</span>
+                    <div class="countdown-label">Minuti</div>
+                </div>
+                <div class="countdown-item">
+                    <span class="countdown-number" id="seconds">--</span>
+                    <div class="countdown-label">Secondi</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- EVENTS -->
+        <section class="events-section">
+            <div class="events-header">
+                <h2 class="section-title" style="color:var(--dark)">La Nostra Giornata</h2>
+                <p class="section-subtitle" style="color:var(--sage)">17 Maggio 2026</p>
+            </div>
+
+            <!-- CERIMONIA -->
+            <div class="event-card">
+                <div class="event-card-top">
+                    <div class="event-card-image" style="background-image: url('https://images.unsplash.com/photo-1510070112810-d4e9a46d9e91?w=800&q=80')">
+                        <div class="event-badge">Cerimonia</div>
+                    </div>
+                    <div class="event-card-info">
+                        <div class="event-icon">&#9962;</div>
+                        <div class="event-time">11:00</div>
+                        <h3 class="event-name">Chiesa di San Simeone Profeta</h3>
+                        <p class="event-address">
+                            <span class="event-address-icon">&#128205;</span>
+                            Camigliano (CE), Campania
+                        </p>
+                        <p class="event-description">
+                            Il momento pi&ugrave; atteso: il nostro "S&igrave;, lo voglio" nella suggestiva Chiesa di San Simeone Profeta.
+                        </p>
+                        <div class="event-actions">
+                            <a href="https://maps.google.com/?q=Chiesa+San+Simeone+Profeta+Camigliano+CE" target="_blank" class="event-btn event-btn-primary">
+                                &#128506; Google Maps
+                            </a>
+                            <a href="https://maps.google.com/maps/dir//Chiesa+San+Simeone+Profeta+Camigliano+CE" target="_blank" class="event-btn">
+                                &#128663; Indicazioni
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <iframe
+                    class="event-card-map"
+                    loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade"
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3015.5!2d14.12!3d41.18!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDHCsDEwJzQ4LjAiTiAxNMKwMDcnMTIuMCJF!5e0!3m2!1sit!2sit!4v1!5m2!1sit!2sit&q=Chiesa+San+Simeone+Profeta+Camigliano"
+                    allowfullscreen>
+                </iframe>
+            </div>
+
+            <!-- RICEVIMENTO -->
+            <div class="event-card">
+                <div class="event-card-top">
+                    <div class="event-card-image" style="background-image: url('https://images.unsplash.com/photo-1559128010-7c1ad6e1b6a5?w=800&q=80')">
+                        <div class="event-badge">Ricevimento</div>
+                    </div>
+                    <div class="event-card-info">
+                        <div class="event-icon">&#127864;</div>
+                        <div class="event-time">14:00</div>
+                        <h3 class="event-name">Villa Punta Pennata</h3>
+                        <p class="event-address">
+                            <span class="event-address-icon">&#128205;</span>
+                            Bacoli (NA), Lago Miseno
+                        </p>
+                        <p class="event-description">
+                            Benvenuti a Villa Punta Pennata! Aperitivo e ricevimento con vista mozzafiato sul Lago Miseno, tra profumi e sapori campani.
+                        </p>
+                        <div class="event-actions">
+                            <a href="https://maps.google.com/?q=Villa+Punta+Pennata+Bacoli" target="_blank" class="event-btn event-btn-primary">
+                                &#128506; Google Maps
+                            </a>
+                            <a href="https://maps.google.com/maps/dir//Villa+Punta+Pennata+Bacoli" target="_blank" class="event-btn">
+                                &#128663; Indicazioni
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <iframe
+                    class="event-card-map"
+                    loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade"
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3015.5!2d14.07!3d40.79!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDDCsDQ3JzI0LjAiTiAxNMKwMDQnMTIuMCJF!5e0!3m2!1sit!2sit!4v1!5m2!1sit!2sit&q=Villa+Punta+Pennata+Bacoli"
+                    allowfullscreen>
+                </iframe>
+            </div>
+        </section>
+
+        <!-- RSVP -->
+        <section class="rsvp-section" id="rsvp">
+            <div class="rsvp-header">
+                <h2 class="section-title">Conferma la tua Presenza</h2>
+                <p class="section-subtitle">Vi preghiamo di confermare entro il 30 Aprile 2026</p>
+            </div>
+            <form class="rsvp-form" id="rsvp-form">
+                <div class="form-group">
+                    <label class="form-label">Nome e Cognome</label>
+                    <input type="text" class="form-input" name="nome" placeholder="Il tuo nome completo" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Numero Ospiti</label>
+                        <select class="form-select" name="ospiti" required>
+                            <option value="">Seleziona</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10">10</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Parteciperai?</label>
+                        <select class="form-select" name="conferma" required>
+                            <option value="">Seleziona</option>
+                            <option value="Si">Si, con gioia!</option>
+                            <option value="No">Purtroppo no</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Allergie / Intolleranze</label>
+                    <input type="text" class="form-input" name="allergie" placeholder="Segnala eventuali allergie o intolleranze">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Note</label>
+                    <textarea class="form-textarea" name="note" placeholder="Un messaggio per gli sposi..."></textarea>
+                </div>
+                <button type="submit" class="rsvp-btn" id="rsvp-btn">Conferma Presenza</button>
+                <div class="form-message" id="form-message"></div>
+            </form>
+        </section>
+
+        <!-- QUOTE -->
+        <section class="quote-section">
+            <div class="quote-icon">&#10075;&#10075;</div>
+            <p class="quote-text">
+                L'amore non si guarda l'un l'altro,<br>
+                ma si guarda insieme nella stessa direzione.
+            </p>
+            <p class="quote-author">&mdash; Antoine de Saint-Exup&eacute;ry</p>
+        </section>
+
+        <!-- FOOTER -->
+        <footer class="footer">
+            <div class="footer-names">Giuseppe & Alessia</div>
+            <p class="footer-date">17 &bull; 05 &bull; 2026</p>
+            <div class="footer-hearts">&#10084; &#10084; &#10084;</div>
+        </footer>
+    </div>
+
+    <script>
+        // ========== DOOR VIDEO ==========
+        const doorOverlay = document.getElementById('door-overlay');
+        const doorVideo = document.getElementById('door-video');
+        const doorCta = document.getElementById('door-cta');
+        const mainContent = document.getElementById('main-content');
+        const bgMusic = document.getElementById('bg-music');
+        const musicToggle = document.getElementById('music-toggle');
+        const musicBars = document.getElementById('music-bars');
+        let doorOpened = false;
+        let musicPlaying = false;
+
+        document.body.style.overflow = 'hidden';
+
+        doorOverlay.addEventListener('click', () => {
+            if (doorOpened) return;
+            doorOpened = true;
+
+            // Hide CTA and play video
+            doorCta.classList.add('hide');
+            doorVideo.play();
+
+            // Start music on interaction
+            bgMusic.volume = 0.4;
+            bgMusic.play().then(() => {
+                musicPlaying = true;
+                musicBars.classList.add('playing');
+            }).catch(() => {});
+
+            // When video ends, dissolve into content
+            doorVideo.addEventListener('ended', () => {
+                doorOverlay.classList.add('dissolve');
+                mainContent.classList.add('visible');
+                document.body.style.overflow = 'auto';
+
+                setTimeout(() => {
+                    doorOverlay.classList.add('gone');
+                }, 2000);
+            });
+
+            // Fallback: if video is very long, dissolve after 8s
+            setTimeout(() => {
+                if (!doorOverlay.classList.contains('dissolve')) {
+                    doorOverlay.classList.add('dissolve');
+                    mainContent.classList.add('visible');
+                    document.body.style.overflow = 'auto';
+                    setTimeout(() => doorOverlay.classList.add('gone'), 2000);
+                }
+            }, 8000);
+        });
+
+        // ========== MUSIC TOGGLE ==========
+        musicToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (musicPlaying) {
+                bgMusic.pause();
+                musicPlaying = false;
+                musicBars.classList.remove('playing');
+            } else {
+                bgMusic.play().then(() => {
+                    musicPlaying = true;
+                    musicBars.classList.add('playing');
+                }).catch(() => {});
+            }
+        });
+
+        // ========== COUNTDOWN ==========
+        function updateCountdown() {
+            const wedding = new Date('2026-05-17T11:00:00+02:00');
+            const now = new Date();
+            const diff = wedding - now;
+
+            if (diff <= 0) {
+                ['days','hours','minutes','seconds'].forEach(id =>
+                    document.getElementById(id).textContent = '0');
+                return;
+            }
+
+            document.getElementById('days').textContent =
+                Math.floor(diff / 86400000);
+            document.getElementById('hours').textContent =
+                String(Math.floor((diff % 86400000) / 3600000)).padStart(2, '0');
+            document.getElementById('minutes').textContent =
+                String(Math.floor((diff % 3600000) / 60000)).padStart(2, '0');
+            document.getElementById('seconds').textContent =
+                String(Math.floor((diff % 60000) / 1000)).padStart(2, '0');
+        }
+
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+
+        // ========== SCROLL ANIMATIONS ==========
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('visible');
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+        document.querySelectorAll('.event-card').forEach(el => observer.observe(el));
+
+        // ========== PARALLAX ==========
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const hero = document.querySelector('.hero-content');
+            if (hero && scrolled < window.innerHeight) {
+                hero.style.transform = `translateY(${scrolled * 0.3}px)`;
+                hero.style.opacity = 1 - (scrolled / window.innerHeight) * 0.8;
+            }
+        });
+
+        // ========== RSVP FORM ==========
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwS_m0EWeR5uONfwsiRxBP_X97BBuRIiZbJcLU8s0WLq09_KXzV_wj6FGCEpDtqseScEQ/exec';
+
+        const rsvpForm = document.getElementById('rsvp-form');
+        const rsvpBtn = document.getElementById('rsvp-btn');
+        const formMessage = document.getElementById('form-message');
+
+        rsvpForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            rsvpBtn.disabled = true;
+            rsvpBtn.textContent = 'Invio in corso...';
+            formMessage.className = 'form-message';
+
+            const fd = new FormData(rsvpForm);
+            const data = {
+                nome: fd.get('nome'),
+                ospiti: fd.get('ospiti'),
+                conferma: fd.get('conferma'),
+                allergie: fd.get('allergie') || '',
+                note: fd.get('note') || ''
+            };
+
+            try {
+                await fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                formMessage.textContent = 'Grazie! La tua conferma \u00e8 stata inviata con successo!';
+                formMessage.className = 'form-message show success';
+                rsvpForm.reset();
+            } catch (error) {
+                formMessage.textContent = 'Si \u00e8 verificato un errore. Riprova pi\u00f9 tardi.';
+                formMessage.className = 'form-message show error';
+            }
+
+            rsvpBtn.disabled = false;
+            rsvpBtn.textContent = 'Conferma Presenza';
+        });
+    </script>
+</body>
+</html>
