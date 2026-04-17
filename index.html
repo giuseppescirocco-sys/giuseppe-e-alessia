@@ -2,7 +2,7 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Giuseppe & Alessia - 17 Maggio 2026</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Great+Vibes&display=swap" rel="stylesheet">
     <style>
@@ -17,13 +17,18 @@
             --navy: #b0c9b8;
         }
 
-        html { scroll-behavior: smooth; }
+        html {
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
 
         body {
             font-family: 'Cormorant Garamond', serif;
             background: var(--cream);
             color: var(--dark);
             overflow-x: hidden;
+            overscroll-behavior-x: none;
+            touch-action: pan-y;
         }
 
         /* music toggle hidden - autoplay only */
@@ -430,10 +435,126 @@
             font-style: italic;
         }
 
+        /* ========== GIFT / IBAN ========== */
+        .gift-section {
+            padding: 100px 20px;
+            background: linear-gradient(135deg, var(--navy), #c5d9cc);
+            text-align: center;
+        }
+
+        .gift-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        .gift-title {
+            font-family: 'Great Vibes', cursive;
+            font-size: clamp(2rem, 5vw, 3rem);
+            color: #2c3e2c;
+            margin-bottom: 15px;
+        }
+
+        .gift-text {
+            font-size: 1.1rem;
+            color: #3a5a42;
+            max-width: 500px;
+            margin: 0 auto 30px;
+            line-height: 1.7;
+        }
+
+        .gift-holder {
+            font-size: 1rem;
+            color: var(--dark);
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        /* Scratch card */
+        .scratch-wrapper {
+            position: relative;
+            width: 380px;
+            height: 120px;
+            margin: 0 auto 15px;
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            user-select: none;
+            -webkit-user-select: none;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        .scratch-content {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            font-family: 'Cormorant Garamond', serif;
+            color: var(--dark);
+            padding: 15px;
+            gap: 6px;
+        }
+
+        .scratch-content .iban-holder {
+            font-size: 0.9rem;
+            color: #777;
+        }
+
+        .scratch-content .iban-number {
+            font-size: 1.1rem;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+        }
+
+        .scratch-canvas {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 2;
+        }
+
+        .scratch-hint {
+            font-size: 0.85rem;
+            color: #999;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+        }
+
+        .copy-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 22px;
+            background: var(--gold);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.5s ease, transform 0.5s ease, background 0.3s ease;
+        }
+
+        .copy-btn.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .copy-btn:hover {
+            background: #4a6a52;
+        }
+
         /* ========== RSVP ========== */
         .rsvp-section {
             padding: 100px 20px;
-            background: linear-gradient(135deg, var(--navy), #c5d9cc);
+            background: var(--cream);
             position: relative;
             overflow: hidden;
         }
@@ -452,7 +573,8 @@
             z-index: 2;
         }
 
-        .rsvp-header .section-subtitle { color: rgba(44,62,44,0.6); }
+        .rsvp-section .section-title { color: var(--dark); }
+        .rsvp-header .section-subtitle { color: var(--sage); }
 
         .rsvp-form {
             max-width: 550px;
@@ -468,7 +590,7 @@
             font-size: 0.85rem;
             letter-spacing: 2px;
             text-transform: uppercase;
-            color: #2c3e2c;
+            color: var(--sage);
             margin-bottom: 8px;
         }
 
@@ -477,8 +599,8 @@
         .form-textarea {
             width: 100%;
             padding: 14px 18px;
-            background: rgba(255,255,255,0.08);
-            border: 1px solid rgba(184,134,11,0.3);
+            background: rgba(0,0,0,0.03);
+            border: 1px solid rgba(90,122,98,0.3);
             border-radius: 10px;
             color: var(--dark);
             font-family: 'Cormorant Garamond', serif;
@@ -488,13 +610,13 @@
         }
 
         .form-input::placeholder,
-        .form-textarea::placeholder { color: rgba(44,44,44,0.35); }
+        .form-textarea::placeholder { color: rgba(44,44,44,0.3); }
 
         .form-input:focus,
         .form-select:focus,
         .form-textarea:focus {
             border-color: var(--gold);
-            background: rgba(255,255,255,0.25);
+            background: rgba(0,0,0,0.05);
             box-shadow: 0 0 20px rgba(184,134,11,0.15);
         }
 
@@ -506,7 +628,7 @@
             cursor: pointer;
         }
 
-        .form-select option { background: #c5d9cc; color: var(--dark); }
+        .form-select option { background: white; color: var(--dark); }
 
         .form-textarea { resize: vertical; min-height: 100px; }
 
@@ -558,13 +680,13 @@
         .quote-section {
             padding: 100px 20px;
             text-align: center;
-            background: var(--cream);
+            background: linear-gradient(135deg, var(--navy), #c5d9cc);
             position: relative;
         }
 
         .quote-icon {
             font-size: 4rem;
-            color: var(--gold-light);
+            color: #2c3e2c;
             opacity: 0.3;
             margin-bottom: 20px;
         }
@@ -576,7 +698,7 @@
             line-height: 1.8;
             max-width: 700px;
             margin: 0 auto;
-            color: var(--dark);
+            color: #2c3e2c;
         }
 
         .quote-author {
@@ -584,7 +706,7 @@
             font-size: 0.9rem;
             letter-spacing: 3px;
             text-transform: uppercase;
-            color: var(--gold);
+            color: #3a5a42;
         }
 
         /* ========== FOOTER ========== */
@@ -771,6 +893,24 @@
             </div>
         </section>
 
+        <!-- GIFT -->
+        <section class="gift-section section-reveal">
+            <div class="gift-icon">&#127873;</div>
+            <h2 class="gift-title">Un Piccolo Regalo</h2>
+            <p class="gift-text">
+                La vostra presenza &egrave; il regalo pi&ugrave; bello che possiate farci.<br>
+                Se per&ograve; volete viziarci un po'... grattate qui sotto!
+            </p>
+            <div class="scratch-wrapper" id="scratch-wrapper">
+                <div class="scratch-content" id="scratch-content">
+                    <span class="iban-holder">Intestato a: Giuseppe Scirocco</span>
+                    <span class="iban-number">IT51J0357601601010005684292</span>
+                </div>
+                <canvas class="scratch-canvas" id="scratch-canvas"></canvas>
+            </div>
+            <button class="copy-btn" id="copy-btn" onclick="copyIBAN()">&#128203; Copia IBAN</button>
+        </section>
+
         <!-- RSVP -->
         <section class="rsvp-section section-reveal" id="rsvp">
             <div class="rsvp-header">
@@ -942,6 +1082,108 @@
                 hero.style.opacity = 1 - (scrolled / window.innerHeight) * 0.8;
             }
         });
+
+        // ========== SCRATCH CARD ==========
+        (function() {
+            const canvas = document.getElementById('scratch-canvas');
+            const wrapper = document.getElementById('scratch-wrapper');
+            const copyBtn = document.getElementById('copy-btn');
+            const ctx = canvas.getContext('2d');
+            let isScratching = false;
+            let revealed = false;
+
+            function initCanvas() {
+                canvas.width = wrapper.offsetWidth;
+                canvas.height = wrapper.offsetHeight;
+
+                // Draw scratch surface
+                // Gold gradient background
+                const grad = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+                grad.addColorStop(0, '#c9a84c');
+                grad.addColorStop(0.3, '#dfc06a');
+                grad.addColorStop(0.5, '#f0d78a');
+                grad.addColorStop(0.7, '#dfc06a');
+                grad.addColorStop(1, '#b8960b');
+                ctx.fillStyle = grad;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                // Subtle shimmer texture
+                for (let i = 0; i < 60; i++) {
+                    ctx.fillStyle = `rgba(255,255,255,${0.05 + Math.random() * 0.15})`;
+                    ctx.beginPath();
+                    ctx.arc(Math.random() * canvas.width, Math.random() * canvas.height, Math.random() * 2 + 0.5, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+
+                // Dark gold sparkle dots
+                for (let i = 0; i < 20; i++) {
+                    ctx.fillStyle = 'rgba(140,110,10,0.2)';
+                    ctx.beginPath();
+                    ctx.arc(Math.random() * canvas.width, Math.random() * canvas.height, Math.random() * 1.5, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+
+                // Text - bold and visible
+                ctx.font = '700 18px "Playfair Display", serif';
+                ctx.fillStyle = '#5a3e0a';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.shadowColor = 'rgba(255,240,180,0.6)';
+                ctx.shadowBlur = 8;
+                ctx.fillText('\u2728 Gratta qui per viziarci \u2728', canvas.width / 2, canvas.height / 2);
+                ctx.shadowBlur = 0;
+            }
+
+            function scratch(x, y) {
+                ctx.globalCompositeOperation = 'destination-out';
+                ctx.beginPath();
+                ctx.arc(x, y, 22, 0, Math.PI * 2);
+                ctx.fill();
+                checkReveal();
+            }
+
+            function checkReveal() {
+                if (revealed) return;
+                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                let transparent = 0;
+                for (let i = 3; i < imageData.data.length; i += 4) {
+                    if (imageData.data[i] === 0) transparent++;
+                }
+                const pct = transparent / (imageData.data.length / 4);
+                if (pct > 0.4) {
+                    revealed = true;
+                    canvas.style.transition = 'opacity 0.5s ease';
+                    canvas.style.opacity = '0';
+                    copyBtn.classList.add('show');
+                }
+            }
+
+            function getPos(e) {
+                const rect = canvas.getBoundingClientRect();
+                const touch = e.touches ? e.touches[0] : e;
+                return { x: touch.clientX - rect.left, y: touch.clientY - rect.top };
+            }
+
+            canvas.addEventListener('mousedown', (e) => { isScratching = true; const p = getPos(e); scratch(p.x, p.y); });
+            canvas.addEventListener('mousemove', (e) => { if (isScratching) { const p = getPos(e); scratch(p.x, p.y); } });
+            canvas.addEventListener('mouseup', () => isScratching = false);
+            canvas.addEventListener('mouseleave', () => isScratching = false);
+
+            canvas.addEventListener('touchstart', (e) => { e.preventDefault(); isScratching = true; const p = getPos(e); scratch(p.x, p.y); }, { passive: false });
+            canvas.addEventListener('touchmove', (e) => { e.preventDefault(); if (isScratching) { const p = getPos(e); scratch(p.x, p.y); } }, { passive: false });
+            canvas.addEventListener('touchend', () => isScratching = false);
+
+            initCanvas();
+            window.addEventListener('resize', () => { if (!revealed) initCanvas(); });
+        })();
+
+        function copyIBAN() {
+            navigator.clipboard.writeText('IT51J0357601601010005684292').then(() => {
+                const btn = document.getElementById('copy-btn');
+                btn.textContent = '\u2705 Copiato!';
+                setTimeout(() => { btn.innerHTML = '&#128203; Copia IBAN'; }, 2000);
+            });
+        }
 
         // ========== FALLING PETALS ==========
         function createPetals() {
